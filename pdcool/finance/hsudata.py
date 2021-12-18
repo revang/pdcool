@@ -5,7 +5,6 @@ from pdcool.utils.dataframe import *
 from pdcool.utils.list import *
 from pdcool.system.param import *
 
-
 token = get_param("dutool", "finance", "hs_udata_token")
 set_token(token=token)
 
@@ -42,7 +41,7 @@ def sync_stock():
     # 重命名列(和数据库列名一致)
     df.set_axis(["c_fina_code", "c_code", "c_exchange", "c_name", "c_full_name", "c_listed_state", "c_listed_sector", "c_source"], axis="columns", inplace=True)
 
-    dataframe_to_table(df, "ttmp_stock")
+    dataframe_to_table(df, "ttmp_stock", if_exists="replace")
     db = DBUtil()
 
     update_count = db.update("""update tstock t,ttmp_stock s
@@ -118,7 +117,7 @@ def __put_fund_dataframe(df):
     # 重命名列(和数据库列名一致)
     df.set_axis(["c_fina_code", "c_code", "c_name", "c_full_name", "c_company_code", "c_company_name", "c_company_full_name", "c_foundation_type", "c_float_type", "c_source"], axis="columns", inplace=True)
 
-    dataframe_to_table(df, "ttmp_fund")
+    dataframe_to_table(df, "ttmp_fund", if_exists="replace")
     db = DBUtil()
 
     update_count = db.update("""update tfund t,ttmp_fund s
