@@ -3,7 +3,7 @@ from hs_udata import set_token, stock_list, fund_list, stock_quote_daily
 from dutool import DateUtil
 from pdcool.utils.dataframe import *
 from pdcool.utils.list import *
-from pdcool.system.param import *
+from pdcool.utils.param import *
 
 token = get_param("dutool", "finance", "hs_udata_token")
 set_token(token=token)

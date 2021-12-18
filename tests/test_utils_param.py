@@ -1,6 +1,6 @@
 
 import unittest
-from pdcool.system.param import *
+from pdcool.utils.param import *
 import logging
 
 logging.basicConfig(level=logging.DEBUG)

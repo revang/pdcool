@@ -2,7 +2,7 @@
 import tushare as ts
 from pdcool.utils.db_utils import DBUtil
 from pdcool.utils.dataframe import *
-from pdcool.system.param import get_param
+from pdcool.utils.param import get_param
 
 
 token = get_param("dutool", "finance", "tushare_token")
