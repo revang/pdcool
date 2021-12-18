@@ -1,5 +1,5 @@
 import time
-from kdcool.utils.db_utils import DBUtil
+from pdcool.utils.db_utils import DBUtil
 
 
 def get_param(system, module, item):

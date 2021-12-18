@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 import dutool
-from kdcool.utils.config import dbconfig
+from pdcool.utils.config import dbconfig
 
 
 class DBUtil(dutool.DBUtil):

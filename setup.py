@@ -4,12 +4,12 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='kdcool',
+    name='pdcool',
     version='0.0.1',
-    keywords='kdcool',
+    keywords='pdcool',
     description='a library for revang developer',
     license='MIT License',
-    url='https://github.com/revang/kdcool',
+    url='https://github.com/revang/pdcool',
     author='revang',
     author_email='revang.alternative@foxmail.com',
     packages=find_packages(),

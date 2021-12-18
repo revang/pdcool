@@ -1,8 +1,8 @@
 
 import unittest
 import logging
-from kdcool.system.param import *
-from kdcool.utils.dataframe import *
+from pdcool.system.param import *
+from pdcool.utils.dataframe import *
 
 logging.basicConfig(level=logging.DEBUG)
 

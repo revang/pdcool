@@ -1,4 +1,4 @@
-from kdcool.utils.config import dbconfig
+from pdcool.utils.config import dbconfig
 from sqlalchemy import create_engine
 import pandas as pd
 
