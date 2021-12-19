@@ -6,14 +6,16 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 class FinanceDanjuanTest(unittest.TestCase):
-    def test_sync_fund_weighting(self):
-        # 单个获取
-        # sync_fund_weighting("320007.OF")
+    # 2021.12.19 测试通过
+    # def test_sync_fund_weighting(self):
+    #     sync_fund_weighting("320007.OF")  # 单个获取
 
-        # 多个获取
-        # sync_fund_weighting(["320007.OF", "519674.OF"])
+    # 2021.12.19 测试通过
+    # def test_sync_fund_weighting_1(self):
+    #     sync_fund_weighting(["320007.OF", "519674.OF"])  # 多个获取
 
-        # [缺陷] (ID=10002) 获取成分股信息添加异常处理: 债券基金没有成分股信息(000092 信诚新双盈分级债券A)
+    # [缺陷] (ID=10002) 获取成分股信息添加异常处理: 债券基金没有成分股信息(000092 信诚新双盈分级债券A)
+    def test_sync_fund_weighting_2(self):
         sync_fund_weighting("000092.OF")
 
 

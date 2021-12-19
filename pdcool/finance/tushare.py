@@ -6,7 +6,7 @@ from pdcool.utils.dataframe import *
 from pdcool.utils.param import get_param
 
 
-token = get_param("dutool", "finance", "tushare_token")
+token = get_param("pdcool", "finance", "tushare_token")
 pro = ts.pro_api(token)
 
 """

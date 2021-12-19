@@ -6,7 +6,7 @@ from pdcool.utils.dataframe import show_dataframe, dataframe_from_sql
 
 class UtilsDbutilTest(unittest.TestCase):
 
-    # # 2021.12.19 spark_dataframe_from_sql测试通过
+    # # 2021.12.19 测试通过
     # def test_spark_dataframe_from_sql(self):
     #     stock_sparkdf = spark_dataframe_from_sql("select c_fina_code,c_name from tstock t")
     #     stock_sparkdf.createOrReplaceTempView("tstock")
@@ -19,15 +19,15 @@ class UtilsDbutilTest(unittest.TestCase):
     #     order by s.c_trade_date desc,t.c_fina_code asc""")
     #     sparkdf.show()
 
-    # # 2021.12.19 spark_dataframe_from_dataframe测试通过
+    # # 2021.12.19 测试通过
     # def test_spark_dataframe_from_dataframe(self):
     #     df = dataframe_from_sql("select c_fina_code,c_name from tstock t")
     #     sparkdf = spark_dataframe_from_dataframe(df)
     #     sparkdf.show()
 
-    # 2021.12.19 spark_dataframe_to_dataframe测试通过
+    # 2021.12.19 测试通过
     def test_spark_dataframe_to_dataframe(self):
-        # 准备工作
+        # 数据准备
         # df = dataframe_from_sql("select c_fina_code,c_name from tstock limit 10")
         # dataframe_to_csv(df, "stock.csv") # 注意: 这一步生成的csv还是带head的, 需要手动去掉, 才能执行后续操作
 

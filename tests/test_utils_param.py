@@ -7,27 +7,29 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 class CommonTest(unittest.TestCase):
-    def test_param(self):
-        # get_param ---> OK
-        # value = get_param("pdcool", "web", "user_agent")
-        # logging.debug(f"{value}")
+    # 2021.12.19 测试通过
+    # def test_get_param(self):
+    #     value = get_param("pdcool", "web", "user_agent")
+    #     logging.debug(f"{value}")
 
-        # put_param ---> OK
-        # value = put_param("test", "test", "test", "test", "test")
-        # logging.debug(f"{value}")
+    # 2021.12.19 测试通过
+    # def test_put_param(self):
+    #     value = put_param("test", "test", "test", "test", "test")
+    #     logging.debug(f"{value}")
 
-        # post_param ---> OK
-        # value = post_param("test", "test", "test", "hello")
-        # logging.debug(f"{value}")
+    # 2021.12.19 测试通过
+    # def test_post_param(self):
+    #     value = post_param("test", "test", "test", "hello")
+    #     logging.debug(f"{value}")
 
-        # delete_param ---> OK
-        # value = delete_param("test", "test", "test")
-        # logging.debug(f"{value}")
+    # 2021.12.19 测试通过
+    # def test_delete_param(self):
+    #     value = delete_param("test", "test", "test")
+    #     logging.debug(f"{value}")
 
-        # show_param ---> OK
-        # show_param()
-
-        None
+    # 2021.12.19 测试通过
+    def test_show_param(self):
+        show_param()
 
 
 if __name__ == '__main__':

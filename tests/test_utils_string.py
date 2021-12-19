@@ -6,6 +6,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 class UtilsStringTest(unittest.TestCase):
+    # 2021.12.19 测试通过
     def test_string_replace(self):
         text = "ac*bb*ac*xx*ac*bb"
         replace_dict = {"ac": "yz", "bb": "pp", "xx": ""}
