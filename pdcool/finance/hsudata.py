@@ -33,37 +33,37 @@ def sync_stock():
     df["secu_abbr"] = df["secu_abbr"].map(lambda x: x.replace(" ", ""))
 
     # 重命名列
-    df.rename(columns={"hs_code": "fina_code", "secu_code": "code", "secu_abbr": "name", "chi_name": "full_name"}, inplace=True)
+    df.rename(columns={"hs_code": "fina_code", "secu_code": "code", "secu_abbr": "name", "chi_name": "fullname", "listed_state": "list_status", "listed_sector": "list_board"}, inplace=True)
 
     # 列筛选排序
-    df = df[["fina_code", "code", "exchange", "name", "full_name", "listed_state", "listed_sector", "source"]]
+    df = df[["fina_code", "code", "exchange", "name", "fullname", "list_status", "list_board", "source"]]
 
     # 重命名列(和数据库列名一致)
-    df.set_axis(["c_fina_code", "c_code", "c_exchange", "c_name", "c_full_name", "c_listed_state", "c_listed_sector", "c_source"], axis="columns", inplace=True)
+    df.set_axis(["c_fina_code", "c_code", "c_exchange", "c_name", "c_fullname", "c_list_status", "c_list_board", "c_source"], axis="columns", inplace=True)
 
     dataframe_to_table(df, "ttmp_stock", if_exists="replace")
     db = DBUtil()
 
     update_count = db.update("""update tstock t,ttmp_stock s
-    set t.c_fina_code     = s.c_fina_code     ,
-        t.c_code          = s.c_code          ,
-        t.c_exchange      = s.c_exchange      ,
-        t.c_name          = s.c_name          ,
-        t.c_full_name     = s.c_full_name     ,
-        t.c_listed_state  = s.c_listed_state  ,
-        t.c_listed_sector = s.c_listed_sector ,
-        t.c_source        = s.c_source        ,
-        t.c_update_time   = now()    
+    set t.c_fina_code     = ifnull(s.c_fina_code    ,t.c_fina_code    ),
+        t.c_code          = ifnull(s.c_code         ,t.c_code         ),
+        t.c_exchange      = ifnull(s.c_exchange     ,t.c_exchange     ),
+        t.c_name          = ifnull(s.c_name         ,t.c_name         ),
+        t.c_fullname      = ifnull(s.c_fullname     ,t.c_fullname     ),
+        t.c_list_status   = ifnull(s.c_list_status  ,t.c_list_status  ),
+        t.c_list_board    = ifnull(s.c_list_board   ,t.c_list_board   ),
+        t.c_source        = ifnull(s.c_source       ,t.c_source       ),
+        t.c_update_time   = now()
     where t.c_fina_code = s.c_fina_code""")
 
-    insert_count = db.insert("""insert ignore into tstock(c_fina_code, c_code, c_exchange, c_name, c_full_name, c_listed_state, c_listed_sector, c_source, c_create_time, c_update_time)
+    insert_count = db.insert("""insert ignore into tstock(c_fina_code, c_code, c_exchange, c_name, c_fullname, c_list_status, c_list_board, c_source, c_create_time, c_update_time)
     select c_fina_code,
         c_code,
         c_exchange,
         c_name,
-        c_full_name,
-        c_listed_state,
-        c_listed_sector,
+        c_fullname,
+        c_list_status,
+        c_list_board,
         c_source,
         now(),
         now()

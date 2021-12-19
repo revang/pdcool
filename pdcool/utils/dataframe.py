@@ -6,6 +6,9 @@ from pandas.core.series import Series
 
 
 def generate_simple_dataframe():
+    """
+    生成一个dataframe
+    """
     dict_list = [
         {"name": "alice", "age": 18, "gender": "female"},
         {"name": "bob", "age": 8, "gender": "male"},
@@ -84,6 +87,9 @@ def dataframe_from_sql(sql, type=None):
 
 
 def show_dataframe(df, type="normal"):
+    """
+    显示dataframe
+    """
     if type == "normal":
         print(df)
     if type == "json":
@@ -95,7 +101,7 @@ def show_dataframe(df, type="normal"):
 
 def dataframe_concat(df_list, type="row"):
     """
-    dataframe合并
+    合并dataframe
     """
     if type == "row":
         return pd.concat(df_list)
@@ -105,19 +111,31 @@ def dataframe_concat(df_list, type="row"):
 
 
 def generate_simple_series():
+    """
+    生成一个series
+    """
     user_dict = {"name": "alice", "age": 18, "gender": "female"}
     return pd.Series(user_dict)
 
 
 def series_to_list(s):
+    """
+    加载series到list
+    """
     return Series.tolist(s)
 
 
 def series_to_dict(s):
+    """
+    加载series到dict
+    """
     return Series.to_dict(s)
 
 
 def series_to_dataframe(s):
+    """
+    加载series到dataframe
+    """
     df = pd.DataFrame(s)
     df = df.T  # 转置: 交换行列
     return df

@@ -1,7 +1,7 @@
 # kdcool
 
 1. 获取基金成分股信息
-2. 获取股票涨跌幅信息（hsudata、tushare）
+2. 获取股票涨跌幅信息（hsudata、tushare）---> 
 3. 获取指数行情
 4. [OK]dataframe函数补充
     - dataframe <---> json  ---> OK
@@ -11,6 +11,7 @@
     - series <---> dict     ---> OK
     - dataframe <---> excel ---> OK
 5. [OK]添加单元测试
+
 
 
 # 参考文档
