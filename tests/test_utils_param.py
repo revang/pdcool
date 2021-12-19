@@ -25,7 +25,9 @@ class CommonTest(unittest.TestCase):
         # logging.debug(f"{value}")
 
         # show_param ---> OK
-        show_param()
+        # show_param()
+
+        None
 
 
 if __name__ == '__main__':

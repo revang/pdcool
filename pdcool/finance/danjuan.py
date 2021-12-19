@@ -1,6 +1,6 @@
 import requests
 import json
-from pdcool.utils.dbutil import DBUtil
+from pdcool.utils.database import DBUtil
 from pdcool.utils.dataframe import *
 from pdcool.utils.param import get_param
 
