@@ -53,6 +53,16 @@ def _put_fund_weighting_dataframe(df):
     dataframe_to_table(df, "tfund_weighting", if_exists="append")
 
 
-def sync_fund_weighting(fund_code):
-    df = _get_fund_weighting_dataframe(fund_code)
+def sync_fund_weighting(fund):
+    """
+    获取基金权重股 fund_code 可以是单个基金代码, 也可以是列表
+    """
+    if not isinstance(fund, str) and not isinstance(fund, list):
+        raise ValueError(f"invalid datatype: fund={type(fund)}")
+
+    df_list = []
+    fund_list = [fund] if isinstance(fund, str) else fund
+    for fund_code in fund_list:
+        df_list.append(_get_fund_weighting_dataframe(fund_code))
+    df = dataframe_concat(df_list)
     _put_fund_weighting_dataframe(df)
