@@ -1,5 +1,5 @@
 
-from pdcool.utils.db_utils import DBUtil
+from pdcool.utils.dbutil import DBUtil
 
 
 def get_stock_name(stock_code):
