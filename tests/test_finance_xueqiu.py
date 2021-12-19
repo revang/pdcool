@@ -1,13 +1,14 @@
 import unittest
 import logging
-from pdcool.finance.tushare import *
+from pdcool.finance.xueqiu import *
 
 logging.basicConfig(level=logging.DEBUG)
 
 
 class FinanceTushareTest(unittest.TestCase):
-    def test_sync_stock(self):
-        sync_stock()
+    def test_get_stock_quotes_by_current_date(self):
+        df = get_stock_quotes_by_current_date()
+        print(df)
 
 
 if __name__ == '__main__':
