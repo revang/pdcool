@@ -1,4 +1,3 @@
-import time
 from pdcool.utils.dbutil import DBUtil
 from pdcool.utils.datetime import current_time
 
