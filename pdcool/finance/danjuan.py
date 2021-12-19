@@ -2,6 +2,7 @@ import requests
 import json
 from pdcool.utils.database import DBUtil
 from pdcool.utils.dataframe import *
+from pdcool.utils.datetime import current_time
 from pdcool.utils.param import get_param
 
 
@@ -31,7 +32,9 @@ def _get_fund_weighting_dataframe(fund_code):
             "stock_price": stock_price,
             "percent": percent,
             "change_percent": change_percent,
-            "source": "danjuan"
+            "source": "danjuan",
+            "create_time": current_time(),
+            "update_time": current_time()
         })
     df = dataframe_from_json(fund_weighting)
     return df
@@ -49,7 +52,7 @@ def _put_fund_weighting_dataframe(df):
         db.delete(f"delete from tfund_weighting where c_date='{date}' and c_fund_code='{fund_code}'")
 
     # 插入数据
-    df.set_axis(["c_date", "c_fund_code", "c_stock_code", "c_stock_name", "n_stock_price", "n_percent", "n_change_percent", "c_source"], axis="columns", inplace=True)
+    df.set_axis(["c_date", "c_fund_code", "c_stock_code", "c_stock_name", "n_stock_price", "n_percent", "n_change_percent", "c_source", "c_create_time", "c_update_time"], axis="columns", inplace=True)
     dataframe_to_table(df, "tfund_weighting", if_exists="append")
 
 
@@ -57,12 +60,13 @@ def sync_fund_weighting(fund):
     """
     获取基金权重股 fund_code 可以是单个基金代码, 也可以是列表
     """
-    if not isinstance(fund, str) and not isinstance(fund, list):
-        raise ValueError(f"invalid datatype: fund={type(fund)}")
+    if isinstance(fund, str) or isinstance(fund, list):
+        df_list = []
+        fund_list = [fund] if isinstance(fund, str) else fund
+        for fund_code in fund_list:
+            df_list.append(_get_fund_weighting_dataframe(fund_code))
+        df = dataframe_concat(df_list)
+        _put_fund_weighting_dataframe(df)
+        return
 
-    df_list = []
-    fund_list = [fund] if isinstance(fund, str) else fund
-    for fund_code in fund_list:
-        df_list.append(_get_fund_weighting_dataframe(fund_code))
-    df = dataframe_concat(df_list)
-    _put_fund_weighting_dataframe(df)
+    raise ValueError(f"invalid datatype: fund={type(fund)}")

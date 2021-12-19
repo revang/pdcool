@@ -1,5 +1,5 @@
 import json
-from pdcool.utils.config import dbconfig
+from pdcool.utils.config import dbconfig as config
 from sqlalchemy import create_engine
 import pandas as pd
 from pandas.core.series import Series
@@ -68,7 +68,7 @@ def dataframe_to_table(dataframe, table, if_exists="append"):
     """
     加载dataframe到数据表. if_exists: fail 引发ValueError; replace 在插入新值前删除表; append 向现有表插入新值
     """
-    database_url = "mysql+pymysql://%s:%s@%s:%s/%s" % (dbconfig.get("username"), dbconfig.get("password"), dbconfig.get("host"), dbconfig.get("port"), dbconfig.get("database"))
+    database_url = f'mysql+pymysql://{config.get("username")}:{config.get("password")}@{config.get("host")}:{config.get("port")}/{config.get("database")}'
     engine = create_engine(database_url)
     dataframe.to_sql(table, engine, if_exists=if_exists, index=False)
 
@@ -77,7 +77,7 @@ def dataframe_from_sql(sql, type=None):
     """
     加载sql到dataframe
     """
-    db = "mysql+pymysql://%s:%s@%s:%s/%s" % (dbconfig.get("username"), dbconfig.get("password"), dbconfig.get("host"), dbconfig.get("port"), dbconfig.get("database"))
+    db = f'mysql+pymysql://{config.get("username")}:{config.get("password")}@{config.get("host")}:{config.get("port")}/{config.get("database")}'
     df = pd.read_sql(sql, db)
 
     if type == "rename":
@@ -91,11 +91,16 @@ def show_dataframe(df, type="normal"):
     显示dataframe
     """
     if type == "normal":
+        pd.set_option('display.unicode.east_asian_width', True)  # 设置命令行输出右对齐
         print(df)
+        return
+
     if type == "json":
         json_data = dataframe_to_json(df)
         for i in json_data:
             print(i)
+        return
+
     raise ValueError(f"invalid type: {type}")
 
 

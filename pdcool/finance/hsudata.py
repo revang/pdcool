@@ -73,7 +73,7 @@ def sync_stock():
     print(f"sync stock complete, update={update_count}, insert={insert_count}")
 
 
-def __get_fund_dataframe(fina_code=None, foundation_type=None, float_type=None):
+def _get_fund_dataframe(fina_code=None, foundation_type=None, float_type=None):
     """
     获取基金信息dataframe. foundation_type 基金运作方式; float_type 发售方式
     """
@@ -110,7 +110,7 @@ def __get_fund_dataframe(fina_code=None, foundation_type=None, float_type=None):
     return df
 
 
-def __put_fund_dataframe(df):
+def _put_fund_dataframe(df):
     """
     保存基金信息dataframe到数据库
     """
@@ -170,27 +170,27 @@ def sync_fund():
         (基金运作方式=8) ---> 615
         (基金运作方式=9) ---> 报错: KeyError: 'result_msg' ---> TypeError: catching classes that do not inherit from BaseException is not allowed ---> 不处理
     """
-    df1 = __get_fund_dataframe(foundation_type="1")
-    df2_1 = __get_fund_dataframe(foundation_type="2", float_type="1")
-    df2_2 = __get_fund_dataframe(foundation_type="2", float_type="2")
-    df2_3 = __get_fund_dataframe(foundation_type="2", float_type="3")
-    df3 = __get_fund_dataframe(foundation_type="3")
-    df4 = __get_fund_dataframe(foundation_type="4")
-    df5 = __get_fund_dataframe(foundation_type="5")
-    df6 = __get_fund_dataframe(foundation_type="6")
-    df7 = __get_fund_dataframe(foundation_type="7")
-    df8 = __get_fund_dataframe(foundation_type="8")
+    df1 = _get_fund_dataframe(foundation_type="1")
+    df2_1 = _get_fund_dataframe(foundation_type="2", float_type="1")
+    df2_2 = _get_fund_dataframe(foundation_type="2", float_type="2")
+    df2_3 = _get_fund_dataframe(foundation_type="2", float_type="3")
+    df3 = _get_fund_dataframe(foundation_type="3")
+    df4 = _get_fund_dataframe(foundation_type="4")
+    df5 = _get_fund_dataframe(foundation_type="5")
+    df6 = _get_fund_dataframe(foundation_type="6")
+    df7 = _get_fund_dataframe(foundation_type="7")
+    df8 = _get_fund_dataframe(foundation_type="8")
     df = dataframe_concat([df1, df2_1, df2_2, df2_3, df3, df4, df5, df6, df7, df8])
 
-    __put_fund_dataframe(df)
+    _put_fund_dataframe(df)
 
 
 def sync_fund_by_code(fina_code):
     """
     同步单个基金信息
     """
-    df = __get_fund_dataframe(fina_code=fina_code)
-    __put_fund_dataframe(df)
+    df = _get_fund_dataframe(fina_code=fina_code)
+    _put_fund_dataframe(df)
 
 
 def __get_stock_quote_daily_dataframe(fina_code, trade_date):
