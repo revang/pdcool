@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pdcool',
-    version='0.0.1',
+    version='1.0.0',
     keywords='pdcool',
     description='a library for revang developer',
     license='MIT License',
