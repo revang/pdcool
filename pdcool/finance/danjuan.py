@@ -1,3 +1,4 @@
+from logging import NOTSET
 import requests
 import json
 from pdcool.utils.database import DBUtil
@@ -70,3 +71,15 @@ def sync_fund_weighting(fund):
         return
 
     raise ValueError(f"invalid datatype: fund={type(fund)}")
+
+
+def get_dataframe_for_fund_realtime_quotes_from_fund_code(fund_code):
+    user_agent = get_param("pdcool", "web", "user_agent")
+    url = f"https://danjuanapp.com/djapi/fund/estimate-nav/{fund_code[0:6]}"
+    headers = {"User-Agent": user_agent}
+    html = requests.get(url, headers=headers)
+    json_text = html.text
+    json_data = json.loads(json_text)
+    item_list = json_data.get("data").get("items")
+    df = dataframe_from_json(item_list)
+    return df
