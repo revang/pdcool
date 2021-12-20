@@ -1,6 +1,7 @@
 import unittest
 import logging
 from pdcool.finance.hsudata import *
+from pdcool.finance.tushare import get_dataframe_for_index
 
 logging.basicConfig(level=logging.DEBUG)
 

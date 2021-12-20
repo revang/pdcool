@@ -91,3 +91,13 @@ def sync_stock():
 
     db.execute("drop table ttmp_stock")
     print(f"sync stock complete, update={update_count}, insert={insert_count}")
+
+
+def get_dataframe_for_index(index_code=None, market=None):
+    """
+    获取指数信息
+    index_code 指数代码
+    market     市场代码: MSCI 指数, CSI 中证指数, SSE 上交所指数, SZSE 深交所指数, CICC 中金指数, SW 申万指数, OTH 其他指数
+    """
+    df = pro.index_basic(ts_code=index_code, market=market)
+    return df
