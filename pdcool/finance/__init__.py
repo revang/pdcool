@@ -23,18 +23,17 @@ def get_fund_name(fund_code):
 
 
 def calc_today_income(row):
-    """
-    计算当日收益
-
-    场景分析
-        1. 当日没有交易 = 当日市值-昨日市值
-        2. 当日买入 = 原持有部分收益+买入部分收益 = [原份额](当日市值-昨日市值)+[买入份额](当日市值-当日成本)
-        3. 当日卖出 = 剩余持有部分收益+卖出部分收益 = [剩余份额](当日市值-昨日市值)+[卖出份额](卖出金额-昨日市值)
-        4. 当日发生买卖 = 原持有部分收益+买入部分收益 = (剩余持有部分收益+卖出部分收益)+买入部分收益
+    """ 计算当日收益
 
     :param row: dataframe行
     :return 当日收益
     """
+    # 场景分析
+    #     1. 当日没有交易 = 当日市值-昨日市值
+    #     2. 当日买入 = 原持有部分收益+买入部分收益 = [原份额](当日市值-昨日市值)+[买入份额](当日市值-当日成本)
+    #     3. 当日卖出 = 剩余持有部分收益+卖出部分收益 = [剩余份额](当日市值-昨日市值)+[卖出份额](卖出金额-昨日市值)
+    #     4. 当日发生买卖 = 原持有部分收益+买入部分收益 = (剩余持有部分收益+卖出部分收益)+买入部分收益
+
     if row["today_inc_share"] == 0 and row["today_dec_share"] == 0:
         val = row["share"]*(row["price"]-row["pre_price"])
     elif row["today_inc_share"] != 0 and row["today_dec_share"] == 0:
@@ -54,12 +53,10 @@ def calc_today_income(row):
 
 
 def calc_total_income(row):
-    """
-    计算累计收益
-
-    场景分析: 累计收益 = 当日市值+卖出金额-成本
+    """ 计算累计收益
 
     :param row: dataframe行
     :return 累计收益
     """
+    # 场景分析: 累计收益 = 当日市值+卖出金额-成本
     return row["share"]*row["price"]+row["sell"]-row["cost"]
