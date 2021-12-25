@@ -5,8 +5,10 @@ from pdcool.utils.string import string_replace
 
 
 def current_date(date_length=10):
-    """
-    当前日期
+    """ 获取当前日期
+
+    :param date_length: 日期长度
+    :return: 当前日期
     """
     if date_length == 8:
         return time.strftime("%Y%m%d", time.localtime())
@@ -16,15 +18,19 @@ def current_date(date_length=10):
 
 
 def current_time():
-    """
-    当前时间
+    """ 获取当前时间
+
+    :return: 当前时间
     """
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
 
 def date_range(begin_date, end_date, date_length=10):
-    """
-    日期遍历
+    """ 遍历日期
+
+    :param begin_date: 开始日期
+    :param end_date: 结束日期
+    :return: 日期列表
     """
     if date_length == 8:
         begin = datetime.date(int(begin_date[0:4]), int(begin_date[4:6]), int(begin_date[6:8]))
@@ -51,8 +57,12 @@ def date_range(begin_date, end_date, date_length=10):
 
 
 def date_format(curr_date, origin_type="YYYY-MM-DD", target_type="YYYYMMDD"):
-    """
-    格式化日期
+    """ 格式化日期
+
+    :param curr_date: 输入日期
+    :param origin_type: 输入日期类型
+    :param target_type: 输出日期类型
+    :return: 输出日期
     """
     replace_dict = {
         "YYYY": "%Y",

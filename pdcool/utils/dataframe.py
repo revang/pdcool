@@ -42,11 +42,11 @@ def dataframe_to_csv(df, path):
     df.to_csv(path, index=False)
 
 
-def dataframe_from_csv(path):
+def dataframe_from_csv(path, encoding="utf-8"):
     """
     加载csv文件到dataframe
     """
-    return pd.read_csv(path)
+    return pd.read_csv(path, encoding=encoding)
 
 
 def dataframe_to_excel(df, path):
