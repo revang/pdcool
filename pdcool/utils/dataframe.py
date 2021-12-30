@@ -4,104 +4,111 @@ from sqlalchemy import create_engine
 import pandas as pd
 from pandas.core.series import Series
 
+""" 基于pandas, 参考文档: http://www.pypandas.cn/docs/reference.html """
+
 
 def generate_simple_dataframe():
-    """
-    生成一个dataframe
-    """
-    dict_list = [
+    """ 生成一个dataframe """
+    simple_dictlist = [
         {"name": "alice", "age": 18, "gender": "female"},
         {"name": "bob", "age": 8, "gender": "male"},
         {"name": "jack", "age": 13, "gender": "male"}
     ]
-    df = pd.DataFrame(dict_list)
-    return df
+    return pd.DataFrame(simple_dictlist)
 
 
-def dataframe_from_json(json_data):
-    """
-    加载json到dataframe. 注意: 这里json准确说应该是dict的list
-    """
-    df = pd.DataFrame(json_data)
-    return df
+def dataframe_from_dictlist(dictlist):
+    """ 加载dictlist到dataframe """
+    return pd.DataFrame(dictlist)
 
 
-def dataframe_to_json(df):
-    """
-    加载dataframe到json. 注意: 这里json准确说应该是dict的list
-    """
+def dataframe_to_dictlist(df):
+    """ 加载dataframe到dictlist """
     json_text = df.to_json(orient="records")
     json_data = json.loads(json_text)
     return json_data
 
 
+def dataframe_from_csv(path, column_name=None, column_type=None, encoding="utf-8"):
+    """ 获取dataframe(读取csv文件) """
+    if not isinstance(path, str) and not isinstance(path, list):
+        raise ValueError(f"invalid path: {path}")
+
+    if isinstance(path, str):
+        return pd.read_csv(path, names=column_name, dtype=column_type, encoding=encoding)
+
+    if isinstance(path, list):
+        df_list = []
+        for item in path:
+            item_df = pd.read_csv(item, names=column_name, dtype=column_type, encoding=encoding)
+            df_list.append(item_df)
+        df = pd.concat(df_list)
+        return df
+
+
 def dataframe_to_csv(df, path):
-    """
-    加载dataframe到csv文件
-    """
+    """ 保存dataframe(写入csv文件) """
     df.to_csv(path, index=False)
 
 
-def dataframe_from_csv(path, encoding="utf-8"):
-    """
-    加载csv文件到dataframe
-    """
-    return pd.read_csv(path, encoding=encoding)
+def dataframe_from_excel(path, sheet=0, column_name=None, column_type=None, encoding="utf-8"):
+    """ 获取dataframe(读取excel文件) """
+    return pd.read_excel(path, sheet_name=sheet, names=column_name, dtype=column_type, encoding=encoding)
 
 
 def dataframe_to_excel(df, path):
-    """
+    """ 
     加载dataframe到excel文件. 注意: 只支持xlsx格式
     """
-    # df.to_csv(path, index=False)
     df.to_excel(path, index=False)
 
 
-def dataframe_from_excel(path, sheet_name="Sheet1"):
-    """
-    加载excel文件到dataframe. 注意: 只支持xlsx格式
-    """
-    return pd.read_excel(path, sheet_name=sheet_name)
-
-
-def dataframe_to_table(dataframe, table, if_exists="append"):
+def dataframe_to_table(dataframe, table, insert_mode="append"):
     """
     加载dataframe到数据表. if_exists: fail 引发ValueError; replace 在插入新值前删除表; append 向现有表插入新值
     """
-    database_url = f'mysql+pymysql://{config.get("username")}:{config.get("password")}@{config.get("host")}:{config.get("port")}/{config.get("database")}'
+    if insert_mode not in ("append", "replace"):
+        raise ValueError(f"invalid insert_mode: {insert_mode}")
+
+    username = config.get("username")
+    password = config.get("password")
+    host = config.get("host")
+    port = config.get("port")
+    database = config.get("database")
+    database_url = f"mysql+pymysql://{username}:{password}@{host}:{port}/{database}"
     engine = create_engine(database_url)
-    dataframe.to_sql(table, engine, if_exists=if_exists, index=False)
+    dataframe.to_sql(table, engine, if_exists=insert_mode, index=False)
 
 
-def dataframe_from_sql(sql, type=None):
+def dataframe_from_sql(sql):
     """
     加载sql到dataframe
     """
-    db = f'mysql+pymysql://{config.get("username")}:{config.get("password")}@{config.get("host")}:{config.get("port")}/{config.get("database")}'
-    df = pd.read_sql(sql, db)
-
-    if type == "rename":
-        df.rename(columns=lambda x: x[2:], inplace=True)
-
+    username = config.get("username")
+    password = config.get("password")
+    host = config.get("host")
+    port = config.get("port")
+    database = config.get("database")
+    database_url = f"mysql+pymysql://{username}:{password}@{host}:{port}/{database}"
+    df = pd.read_sql(sql, database_url)
     return df
 
 
-def show_dataframe(df, type="normal"):
-    """
-    显示dataframe
-    """
-    if type == "normal":
+def show_dataframe(df, show_type="normal"):
+    """ 显示dataframe """
+    if show_type not in ("normal", "dictlist"):
+        raise ValueError(f"invalid show_type: {show_type}")
+
+    if show_type == "normal":
         pd.set_option('display.unicode.east_asian_width', True)  # 设置命令行输出右对齐
         print(df)
         return
 
-    if type == "json":
-        json_data = dataframe_to_json(df)
-        for i in json_data:
+    if show_type == "dictlist":
+        distlist = dataframe_to_dictlist(df)
+        for i in distlist:
             print(i)
         return
-
-    raise ValueError(f"invalid type: {type}")
 
 
 def dataframe_concat(df_list, type="row"):
@@ -115,12 +122,18 @@ def dataframe_concat(df_list, type="row"):
     raise ValueError(f"invalid type: {type}")
 
 
+def dataframe_union(df_list):
+    return pd.concat(df_list)
+
+
+def dataframe_join(df1, df2):
+    return pd.merge(df1, df2)
+
+
 def generate_simple_series():
-    """
-    生成一个series
-    """
-    user_dict = {"name": "alice", "age": 18, "gender": "female"}
-    return pd.Series(user_dict)
+    """ 生成一个Series """
+    simple_dict = {"name": "alice", "age": 18, "gender": "female"}
+    return pd.Series(simple_dict)
 
 
 def series_to_list(s):
