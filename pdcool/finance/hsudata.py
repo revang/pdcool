@@ -1,5 +1,6 @@
 import numpy as np
-from hs_udata import set_token, stock_list, fund_list, stock_quote_daily
+from hs_udata import set_token, stock_list, fund_list, stock_quote_daily, fund_profile
+from pdcool.finance import get_fund_name
 from pdcool.utils.dataframe import *
 from pdcool.utils.list import *
 from pdcool.utils.param import *
@@ -315,3 +316,28 @@ def sync_stock_quote_daily_by_date(trade_date):
         df_list.append(__get_stock_quote_daily_dataframe(stock_text, trade_date))
     df = dataframe_concat(df_list)
     __put_stock_quote_daily_dataframe(df)
+
+
+def _get_fund_profile(fund_code):
+    df = fund_profile(fund_code)
+    df["fund_code"] = df["prod_code"]
+    df["fund_name"] = df["chi_name_abbr"]
+    df.rename(columns={"nv_value": "fund_asset", "fund_type_code": "fund_type"}, inplace=True)
+    df = df[["fund_code", "fund_name", "fund_asset", "fund_type"]]
+    return df
+
+
+def sync_fund_profile(fund_code):
+    """ 同步基金概况
+
+    """
+    db = DBUtil()
+    rows = db.query("select fund_code from fund_property limit 100")
+    fund_list = [row[0] for row in rows]
+    fund_list = list_split(fund_list, 10)  # 以固定长度分割数组
+    df_list = []
+    for fund in fund_list:
+        fund_text = ",".join(fund)
+        df_list.append(_get_fund_profile(fund_text))
+    df = dataframe_concat(df_list)
+    show_dataframe(df)
