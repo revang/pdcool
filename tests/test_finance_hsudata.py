@@ -20,8 +20,12 @@ class FinanceHsudataTest(unittest.TestCase):
     #     sync_fund_by_code("000008.OF")
 
     # 2021.12.19 测试通过
-    def test_sync_stock_quote_daily_by_date(self):
-        sync_stock_quote_daily_by_date("20211217")
+    # def test_sync_stock_quote_daily_by_date(self):
+    #     sync_stock_quote_daily_by_date("20211217")
+
+    def test_fund_profile(self):
+        df = sync_fund_profile("000404.OF")
+        show_dataframe(df)
 
 
 if __name__ == '__main__':
