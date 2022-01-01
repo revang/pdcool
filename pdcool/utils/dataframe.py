@@ -1,4 +1,5 @@
 import json
+import re
 from pdcool.utils.config import dbconfig as config
 from sqlalchemy import create_engine
 import pandas as pd
@@ -123,11 +124,33 @@ def dataframe_concat(df_list, type="row"):
 
 
 def dataframe_union(df_list):
+    """ dataframe纵向拼接 """
     return pd.concat(df_list)
 
 
 def dataframe_join(df1, df2):
+    """ dataframe横向拼接 """
     return pd.merge(df1, df2)
+
+
+def dataframe_count(df, count_type="row"):
+    """ dataframe行数/列数/单元格数 """
+    if count_type not in ("row", "column", "cell"):
+        raise ValueError(f"invaild count_type: {count_type}")
+
+    if count_type == "row":
+        return len(df)
+
+    if count_type == "column":
+        return len(df.columns)
+
+    if count_type == "cell":
+        return df.size
+
+
+def dataframe_first_value(df):
+    """ dataframe第一个值 """
+    return df.iloc[[0], [0]].values[0][0]
 
 
 def generate_simple_series():
