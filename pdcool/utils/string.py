@@ -1,3 +1,13 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+"""
+Author            : revang
+Date              : 2022-01-01 18:47:41
+Last Modified by  : revang
+Last Modified time: 2022-01-01 18:47:41
+"""
+
 
 def string_replace(text, replace_dict):
     """  根据字典替换字符串的值

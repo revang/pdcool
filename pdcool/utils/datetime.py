@@ -1,6 +1,17 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+"""
+Author            : revang
+Date              : 2022-01-01 18:47:01
+Last Modified by  : revang
+Last Modified time: 2022-01-01 18:47:01
+"""
+
+import datetime
 import logging
 import time
-import datetime
+
 from pdcool.utils.string import string_replace
 
 

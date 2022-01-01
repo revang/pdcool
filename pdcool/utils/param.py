@@ -1,3 +1,13 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+"""
+Author            : revang
+Date              : 2022-01-01 18:47:28
+Last Modified by  : revang
+Last Modified time: 2022-01-01 18:47:28
+"""
+
 from pdcool.utils.database import DBUtil
 from pdcool.utils.datetime import current_time
 

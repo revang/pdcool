@@ -1,3 +1,14 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+"""
+Author            : revang
+Date              : 2022-01-01 18:47:20
+Last Modified by  : revang
+Last Modified time: 2022-01-01 18:47:20
+"""
+
+
 def list_split(list_collection, num):
     """
     将集合均分，每份n个元素

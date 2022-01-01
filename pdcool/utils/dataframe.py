@@ -1,12 +1,19 @@
-import json
-import re
-from pdcool.utils.config import dbconfig as config
-from sqlalchemy import create_engine
-import pandas as pd
-from pandas.core.series import Series
-import numpy as np
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
 
-""" 基于pandas, 参考文档: http://www.pypandas.cn/docs/reference.html """
+"""
+Author            : revang
+Date              : 2022-01-01 17:48:36
+Last Modified by  : revang
+Last Modified time: 2022-01-01 17:48:36
+"""
+
+import json
+import numpy as np
+import pandas as pd
+from sqlalchemy import create_engine
+from pandas.core.series import Series
+from pdcool.utils.config import dbconfig as config
 
 
 def generate_simple_dataframe():

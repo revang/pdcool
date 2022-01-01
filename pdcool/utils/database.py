@@ -1,11 +1,18 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
+"""
+Author             : revang
+Date               : 2022-01-01 17:38:01
+Last Modified by   : revang
+Last Modified time : 2022-01-01 17:38:01
+"""
+
+import logging
 import pymysql
 from pdcool.utils.config import dbconfig as config
-import logging
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.ERROR)
 
 # class DBUtil(dutool.DBUtil):
 #     """
