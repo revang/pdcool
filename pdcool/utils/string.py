@@ -9,6 +9,8 @@ Last Modified time: 2022-01-01 18:47:41
 """
 
 
+
+
 def string_replace(text, replace_dict):
     """  根据字典替换字符串的值
 
@@ -20,3 +22,18 @@ def string_replace(text, replace_dict):
     for key, val in replace_dict.items():
         res = res.replace(key, val)
     return res
+
+
+def is_valid_mail(text):
+    """ 验证邮件地址 """
+    None
+
+
+def is_valid_mobilephone(text):
+    """ 验证手机号码 """
+    None
+
+
+def is_valid_identiynumber(text):
+    """ 验证身份证号 """
+    None
