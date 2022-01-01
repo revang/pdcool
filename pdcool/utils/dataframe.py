@@ -19,12 +19,12 @@ def generate_simple_dataframe():
 
 
 def dataframe_from_dictlist(dictlist):
-    """ 加载dictlist到dataframe """
+    """ 获取dataframe(读取dictlist) """
     return pd.DataFrame(dictlist)
 
 
 def dataframe_to_dictlist(df):
-    """ 加载dataframe到dictlist """
+    """ 保存dataframe(写入dictlist) """
     json_text = df.to_json(orient="records")
     json_data = json.loads(json_text)
     return json_data
@@ -58,16 +58,24 @@ def dataframe_from_excel(path, sheet=0, column_name=None, column_type=None, enco
 
 
 def dataframe_to_excel(df, path):
-    """ 
-    加载dataframe到excel文件. 注意: 只支持xlsx格式
-    """
+    """ 保存dataframe(写入excel文件) """
     df.to_excel(path, index=False)
 
 
+def dataframe_from_sql(sql):
+    """ 获取dataframe(读取sql) """
+    username = config.get("username")
+    password = config.get("password")
+    host = config.get("host")
+    port = config.get("port")
+    database = config.get("database")
+    database_url = f"mysql+pymysql://{username}:{password}@{host}:{port}/{database}"
+    df = pd.read_sql(sql, database_url)
+    return df
+
+
 def dataframe_to_table(dataframe, table, insert_mode="append"):
-    """
-    加载dataframe到数据表. if_exists: fail 引发ValueError; replace 在插入新值前删除表; append 向现有表插入新值
-    """
+    """ 保存dataframe(写入数据库table) """
     if insert_mode not in ("append", "replace"):
         raise ValueError(f"invalid insert_mode: {insert_mode}")
 
@@ -79,20 +87,6 @@ def dataframe_to_table(dataframe, table, insert_mode="append"):
     database_url = f"mysql+pymysql://{username}:{password}@{host}:{port}/{database}"
     engine = create_engine(database_url)
     dataframe.to_sql(table, engine, if_exists=insert_mode, index=False)
-
-
-def dataframe_from_sql(sql):
-    """
-    加载sql到dataframe
-    """
-    username = config.get("username")
-    password = config.get("password")
-    host = config.get("host")
-    port = config.get("port")
-    database = config.get("database")
-    database_url = f"mysql+pymysql://{username}:{password}@{host}:{port}/{database}"
-    df = pd.read_sql(sql, database_url)
-    return df
 
 
 def show_dataframe(df, show_type="normal"):
@@ -107,15 +101,13 @@ def show_dataframe(df, show_type="normal"):
 
     if show_type == "dictlist":
         distlist = dataframe_to_dictlist(df)
-        for i in distlist:
-            print(i)
+        for item in distlist:
+            print(item)
         return
 
 
 def dataframe_concat(df_list, type="row"):
-    """
-    合并dataframe
-    """
+    """ 合并dataframe(已停止维护, 后续版本将会删除) """
     if type == "row":
         return pd.concat(df_list)
     if type == "column":
@@ -159,24 +151,23 @@ def generate_simple_series():
     return pd.Series(simple_dict)
 
 
-def series_to_list(s):
-    """
-    加载series到list
-    """
-    return Series.tolist(s)
+def series_from_dict(d):
+    """ 获取series(读取dict) """
+    return pd.Series(d)
 
 
 def series_to_dict(s):
-    """
-    加载series到dict
-    """
+    """ 保存series(写入dict) """
     return Series.to_dict(s)
 
 
+def series_to_list(s):
+    """ 保存series(写入list) """
+    return Series.tolist(s)
+
+
 def series_to_dataframe(s):
-    """
-    加载series到dataframe
-    """
+    """ 保存series(写入dataframe) """
     df = pd.DataFrame(s)
     df = df.T  # 转置: 交换行列
     return df
