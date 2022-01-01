@@ -1,9 +1,18 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
 
-import enum
-import unittest
+"""
+Author            : revang
+Date              : 2022-01-01 18:49:09
+Last Modified by  : revang
+Last Modified time: 2022-01-01 18:49:09
+"""
+
+
 import logging
-from pdcool.utils.param import *
+import unittest
 from pdcool.utils.dataframe import *
+from pdcool.utils.param import *
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -96,6 +105,7 @@ class DataframeTest(unittest.TestCase):
         assert dataframe_count(df1_2, count_type="row") == 3
         assert dataframe_count(df1_2, count_type="column") == 3
 
+    # 2022.01.01 测试通过
     def test_dataframe_from_excel(self):
         df1 = dataframe_from_excel(r"resources\input\fund.xlsx")
         # show_dataframe(df1)
@@ -107,6 +117,7 @@ class DataframeTest(unittest.TestCase):
         assert dataframe_count(df2, count_type="row") == 7
         assert dataframe_count(df2, count_type="column") == 4
 
+    # 2022.01.01 测试通过
     def test_dataframe_to_excel(self):
         df1_1 = generate_simple_dataframe()
         # show_dataframe(df1_1)
