@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pdcool',
-    version='1.0.0',
+    version='1.1.0',
     keywords='pdcool',
     description='a library for revang developer',
     license='MIT License',
@@ -16,6 +16,11 @@ setup(
     include_package_data=True,
     platforms='any',
     install_requires=[
-        # 'request>=2.26.0',
+        'requests==2.26.0',
+        'pymysql==1.0.2',
+        'sqlalchemy==1.4.28',
+        'pandas==1.3.5',
+        'hs-udata==0.2.4',
+        'tushare==1.2.78'
     ],
 )
