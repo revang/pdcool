@@ -4,6 +4,7 @@ from pdcool.utils.config import dbconfig as config
 from sqlalchemy import create_engine
 import pandas as pd
 from pandas.core.series import Series
+import numpy as np
 
 """ 基于pandas, 参考文档: http://www.pypandas.cn/docs/reference.html """
 
@@ -28,6 +29,16 @@ def dataframe_to_dictlist(df):
     json_text = df.to_json(orient="records")
     json_data = json.loads(json_text)
     return json_data
+
+
+def dataframe_from_dict(dict, dict_type="columns", column_name=None,):
+    if dict_type not in ("columns", "index"):
+        raise ValueError(f"invalid dict_type: {dict_type}")
+
+    df = pd.DataFrame.from_dict(dict, orient=dict_type, columns=column_name)
+    df.reset_index(level=0, inplace=True)
+    df = dataframe_rename(column_name)
+    return df
 
 
 def dataframe_from_csv(path, column_name=None, column_type=None, encoding="utf-8"):
@@ -104,6 +115,34 @@ def show_dataframe(df, show_type="normal"):
         for item in distlist:
             print(item)
         return
+
+
+def dataframe_rename(df, column):
+    """ dataframe重命名列名 """
+    if not isinstance(column, list) and not isinstance(column, dict):
+        raise ValueError(f"invalid column: {column}")
+
+    if isinstance(column, list):
+        return df.set_axis(column, axis="columns")
+
+    if isinstance(column, dict):
+        return df.rename(columns=column)
+
+
+def dataframe_empty_none(df):
+    """ dataframe清空空字符串 """
+    return df.replace(to_replace=r"^\s*$", value=np.nan, regex=True)
+
+
+def dataframe_fill_none(df, val=""):
+    """ dataframe填充空值的值 """
+    df.fillna(val)
+    return df
+
+
+def dataframe_transform_dict(df, column_name, dict):
+    """ dataframe翻译字典值 """
+    return df[column_name].replace(dict)
 
 
 def dataframe_concat(df_list, type="row"):
