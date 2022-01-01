@@ -18,25 +18,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 class DataframeTest(unittest.TestCase):
-    # 2021.12.19 测试通过
-    # def test_dataframe_from_sql(self):
-    #     df = dataframe_from_sql("select * from tstock limit 3")
-    #     logging.debug(df)
-    #     self.assertIsNotNone(df)
-
-    # 2021.12.19 测试通过
-    # [缺陷] (ID=10001) 修复rename参数无效问题: dataframe_from_sql使用rename无效
-    # def test_dataframe_from_sql_1(self):
-    #     df = dataframe_from_sql("select * from tstock limit 3", type="rename")
-    #     logging.debug(df)
-
-    # 2021.12.19 测试通过
-    # def test_dataframe_concat(self):
-    #     df1 = dataframe_from_sql("select * from tstock limit 3")
-    #     df2 = dataframe_from_sql("select * from tstock limit 5")
-    #     df = dataframe_concat([df1, df2])
-    #     logging.debug(df)
-    #     self.assertIsNotNone(df)
 
     # 2022.01.01 测试通过
     def test_generate_simple_dataframe(self):
@@ -126,6 +107,112 @@ class DataframeTest(unittest.TestCase):
         # show_dataframe(df1_2)
         assert dataframe_count(df1_2, count_type="row") == 3
         assert dataframe_count(df1_2, count_type="column") == 3
+
+    # 2021.12.19 测试通过
+    # def test_dataframe_from_sql(self):
+    #     df = dataframe_from_sql("select * from tstock limit 3")
+    #     assert dataframe_count(df, count_type="row") == 3
+
+    # 2022.01.01 测试通过
+    # def test_dataframe_to_table(self):
+    #     df = generate_simple_dataframe()
+    #     dataframe_to_table(df, "ttmp_simple", insert_mode="replace")
+    #     db = DBUtil()
+    #     count = db.queryone("select count(*) from ttmp_simple")[0]
+    #     db.execute("drop table ttmp_simple")
+    #     assert count == 3
+
+    # 2022.01.01 测试通过
+    def test_show_dataframe(self):
+        df = generate_simple_dataframe()
+        # show_dataframe(df)
+        # show_dataframe(df, show_type="dictlist")
+
+    # 2022.01.01 测试通过
+    def test_dataframe_rename(self):
+        df1 = generate_simple_dataframe()
+        column_dict = {"name": "test1", "age": "test2", "gender": "test3"}
+        df1 = dataframe_rename(df1, column_dict)
+        assert list(df1) == ["test1", "test2", "test3"]
+
+        df2 = generate_simple_dataframe()
+        column_list = ["test1", "test2", "test3"]
+        df2 = dataframe_rename(df1, column_list)
+        assert list(df2) == ["test1", "test2", "test3"]
+
+    # 2022.01.01 测试通过
+    def test_dataframe_empty_none(self):
+        df = generate_simple_dataframe()
+        df["test1"] = ""
+        df["test2"] = None
+        df = dataframe_empty_none(df)
+        # show_dataframe(df)
+        count = df.isna().sum().sum()
+        assert count == 6
+
+    # 2022.01.01 测试通过
+    def test_dataframe_fill_none(self):
+        df = generate_simple_dataframe()
+        df["test1"] = ""
+        df["test2"] = None
+        df = dataframe_empty_none(df)
+        df = dataframe_fill_none(df, "0")
+        # show_dataframe(df)
+        val1 = df.iloc[[0], [3]].values[0][0]
+        val2 = df.iloc[[0], [4]].values[0][0]
+        assert val1 == "0"
+        assert val2 == "0"
+
+    # 2022.01.01 测试通过
+    def test_dataframe_transform_dict(self):
+        df = generate_simple_dataframe()
+        df = dataframe_transform_dict(df, "gender", {"female": "女", "male": "男"})
+        # show_dataframe(df)
+        val1 = df.iloc[[0], [2]].values[0][0]
+        val2 = df.iloc[[1], [2]].values[0][0]
+        assert val1 == "女"
+        assert val2 == "男"
+
+    def test_dataframe_concat(self):
+        None
+
+    # 2022.01.01 测试通过
+    def test_dataframe_union(self):
+        df1 = generate_simple_dataframe()
+        df2 = generate_simple_dataframe()
+        df = dataframe_union([df1, df2])
+        # show_dataframe(df)
+        row_count = dataframe_count(df, count_type="row")
+        column_count = dataframe_count(df, count_type="column")
+        assert row_count == 6
+        assert column_count == 3
+
+    def test_dataframe_join(self):
+        None
+
+    def test_dataframe_count(self):
+        None
+
+    def test_dataframe_first_value(self):
+        None
+
+    def test_dataframe_groupby_count(self):
+        None
+
+    def test_generate_simple_series(self):
+        None
+
+    def test_series_from_dict(self):
+        None
+
+    def test_series_to_dict(self):
+        None
+
+    def test_series_to_list(self):
+        None
+
+    def test_series_to_dataframe(self):
+        None
 
 
 if __name__ == '__main__':

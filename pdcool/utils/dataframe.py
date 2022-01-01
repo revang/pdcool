@@ -143,7 +143,10 @@ def dataframe_rename(df, column):
 
 def dataframe_empty_none(df):
     """ dataframe清空空字符串 """
-    return df.replace(to_replace=r"^\s*$", value=np.nan, regex=True)
+    df = df.replace("", np.nan)                          # 替换空字符串
+    df = df.replace(to_replace=r"^\s*?$", value=np.nan)  # 替换空白符
+    df = df.fillna(value=np.nan)                         # 替换None值
+    return df
 
 
 def dataframe_fill_none(df, val=""):
@@ -153,7 +156,8 @@ def dataframe_fill_none(df, val=""):
 
 def dataframe_transform_dict(df, column_name, dict):
     """ dataframe翻译字典值 """
-    return df[column_name].replace(dict)
+    df[column_name].replace(dict, inplace=True)
+    return df
 
 
 def dataframe_concat(df_list, type="row"):
