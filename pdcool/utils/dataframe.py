@@ -35,9 +35,9 @@ def dataframe_from_dict(dict, dict_type="columns", column_name=None,):
     if dict_type not in ("columns", "index"):
         raise ValueError(f"invalid dict_type: {dict_type}")
 
-    df = pd.DataFrame.from_dict(dict, orient=dict_type, columns=column_name)
+    df = pd.DataFrame.from_dict(dict, orient=dict_type)
     df.reset_index(level=0, inplace=True)
-    df = dataframe_rename(column_name)
+    df = dataframe_rename(df, column_name)
     return df
 
 
@@ -136,8 +136,7 @@ def dataframe_empty_none(df):
 
 def dataframe_fill_none(df, val=""):
     """ dataframe填充空值的值 """
-    df.fillna(val)
-    return df
+    return df.fillna(val)
 
 
 def dataframe_transform_dict(df, column_name, dict):
