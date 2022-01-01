@@ -51,7 +51,8 @@ class DataframeTest(unittest.TestCase):
             "age": [18, 8, 13],
             "gender": ["female", "male", "male"]
         }
-        df1 = dataframe_from_listdict(listdict1)
+        df1 = dataframe_from_listdict(listdict1, column_name=["test1", "test2", "test3"])
+        # show_dataframe(df1)
         assert dataframe_count(df1, count_type="row") == 3
         assert dataframe_count(df1, count_type="column") == 3
 
@@ -190,14 +191,31 @@ class DataframeTest(unittest.TestCase):
     def test_dataframe_join(self):
         None
 
+    # 2022.01.01 测试通过
     def test_dataframe_count(self):
-        None
+        df = generate_simple_dataframe()
+        row_count = dataframe_count(df, count_type="row")
+        column_count = dataframe_count(df, count_type="column")
+        cell_count = dataframe_count(df, count_type="cell")
+        assert row_count == 3
+        assert column_count == 3
+        assert cell_count == 9
 
+    # 2022.01.01 测试通过
     def test_dataframe_first_value(self):
-        None
+        df = generate_simple_dataframe()
+        val = dataframe_first_value(df)
+        assert val == "alice"
 
+    # 2022.01.01 测试通过
     def test_dataframe_groupby_count(self):
-        None
+        df1 = generate_simple_dataframe()
+        df2 = generate_simple_dataframe()
+        df = dataframe_union([df1, df2])
+        df = dataframe_groupby_count(df, "name", count_name="name_count")
+        # show_dataframe(df)
+        count1 = df.iloc[[0], [1]].values[0][0]
+        assert count1 == 2
 
     def test_generate_simple_series(self):
         None

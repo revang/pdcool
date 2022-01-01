@@ -39,15 +39,20 @@ def dataframe_to_dictlist(df):
 
 
 def dataframe_from_listdict(listdict, dict_type="columns", column_name=None):
+    """ 获取dataframe(读取listdict) """
     if dict_type not in ("columns", "index"):
         raise ValueError(f"invalid dict_type: {dict_type}")
 
-    df = pd.DataFrame.from_dict(listdict, orient=dict_type)
-    if dict_type == "index":
+    if dict_type in ("columns"):
+        df = pd.DataFrame.from_dict(listdict, orient=dict_type)  # 如果dict_type="columns", 则不使用column_name
+        return df
+
+    if dict_type in ("index"):
+        df = pd.DataFrame.from_dict(listdict, orient=dict_type)
         df.reset_index(level=0, inplace=True)
-    if column_name:
-        df = dataframe_rename(df, column_name)
-    return df
+        if column_name:
+            df = dataframe_rename(df, column_name)
+        return df
 
 
 def dataframe_from_csv(path, column_name=None, column_type=None, encoding="utf-8"):
