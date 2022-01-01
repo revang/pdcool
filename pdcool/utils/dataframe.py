@@ -52,9 +52,9 @@ def dataframe_to_csv(df, path):
     df.to_csv(path, index=False)
 
 
-def dataframe_from_excel(path, sheet=0, column_name=None, column_type=None, encoding="utf-8"):
+def dataframe_from_excel(path, sheet=0, column_name=None, column_type=None):
     """ 获取dataframe(读取excel文件) """
-    return pd.read_excel(path, sheet_name=sheet, names=column_name, dtype=column_type, encoding=encoding)
+    return pd.read_excel(path, sheet_name=sheet, names=column_name, dtype=column_type)
 
 
 def dataframe_to_excel(df, path):
@@ -145,6 +145,14 @@ def dataframe_first_value(df):
     return df.iloc[[0], [0]].values[0][0]
 
 
+def dataframe_groupby_count(df, column, count_name="count"):
+    """ dataframe分组计数 """
+    if not isinstance(column, str) and not isinstance(column, list):
+        raise ValueError(f"invaild column: {column}")
+
+    return df.groupby(column).size().to_frame(count_name).reset_index()
+
+
 def generate_simple_series():
     """ 生成一个Series """
     simple_dict = {"name": "alice", "age": 18, "gender": "female"}
@@ -166,8 +174,9 @@ def series_to_list(s):
     return Series.tolist(s)
 
 
-def series_to_dataframe(s):
+def series_to_dataframe(s, is_transposition=True):
     """ 保存series(写入dataframe) """
     df = pd.DataFrame(s)
-    df = df.T  # 转置: 交换行列
+    if is_transposition:
+        df = df.T  # 转置行列
     return df
