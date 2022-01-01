@@ -31,13 +31,15 @@ def dataframe_to_dictlist(df):
     return json_data
 
 
-def dataframe_from_dict(dict, dict_type="columns", column_name=None,):
+def dataframe_from_listdict(listdict, dict_type="columns", column_name=None):
     if dict_type not in ("columns", "index"):
         raise ValueError(f"invalid dict_type: {dict_type}")
 
-    df = pd.DataFrame.from_dict(dict, orient=dict_type)
-    df.reset_index(level=0, inplace=True)
-    df = dataframe_rename(df, column_name)
+    df = pd.DataFrame.from_dict(listdict, orient=dict_type)
+    if dict_type == "index":
+        df.reset_index(level=0, inplace=True)
+    if column_name:
+        df = dataframe_rename(df, column_name)
     return df
 
 
@@ -47,12 +49,15 @@ def dataframe_from_csv(path, column_name=None, column_type=None, encoding="utf-8
         raise ValueError(f"invalid path: {path}")
 
     if isinstance(path, str):
-        return pd.read_csv(path, names=column_name, dtype=column_type, encoding=encoding)
+        if not column_name:
+            return pd.read_csv(path, dtype=column_type, encoding=encoding)
+        else:
+            return pd.read_csv(path, names=column_name, dtype=column_type, encoding=encoding, skiprows=1)
 
     if isinstance(path, list):
         df_list = []
         for item in path:
-            item_df = pd.read_csv(item, names=column_name, dtype=column_type, encoding=encoding)
+            item_df = dataframe_from_csv(item, column_name=column_name, column_type=column_type, encoding=encoding)
             df_list.append(item_df)
         df = pd.concat(df_list)
         return df

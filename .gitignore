@@ -133,3 +133,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 pdcool/utils/config.py
+resources/output/
