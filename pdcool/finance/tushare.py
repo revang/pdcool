@@ -1,7 +1,6 @@
-
 import tushare as ts
 import numpy as np
-from pdcool.utils.database import DBUtil
+from pdcool.utils.database.mysql import DBUtil
 from pdcool.utils.dataframe import *
 from pdcool.utils.param import get_param
 
@@ -21,7 +20,11 @@ pro = ts.pro_api(token)
 
 
 def sync_stock():
-    df = pro.stock_basic(exchange="", list_status="L", fields="ts_code,symbol,name,area,industry,fullname,enname,cnspell,market,exchange,curr_type,list_status,list_date,delist_date,is_hs")
+    df = pro.stock_basic(
+        exchange="",
+        list_status="L",
+        fields="ts_code,symbol,name,area,industry,fullname,enname,cnspell,market,exchange,curr_type,list_status,list_date,delist_date,is_hs",
+    )
 
     # 补充缺失列
     df["code"] = df["ts_code"].map(lambda x: x.split(".")[0])
@@ -29,26 +32,70 @@ def sync_stock():
     df["source"] = "tushare"
 
     # 处理异常值和字典转换
-    df.replace(to_replace=r"^\s*$", value=np.nan, regex=True, inplace=True)  # 将空字符串变更为空值
+    df.replace(
+        to_replace=r"^\s*$", value=np.nan, regex=True, inplace=True
+    )  # 将空字符串变更为空值
     df["is_hs"].replace({"N": "否", "H": "沪港通", "S": "深港通"}, inplace=True)
     df["list_status"].replace({"L": "上市", "D": "退市", "P": "暂停上市"}, inplace=True)
 
     # 重命名列
-    df.rename(columns={"ts_code": "fina_code", "is_hs": "shsc", "market": "list_board"}, inplace=True)
+    df.rename(
+        columns={"ts_code": "fina_code", "is_hs": "shsc", "market": "list_board"},
+        inplace=True,
+    )
 
     # 列筛选排序
-    df = df[["fina_code", "code", "exchange", "name", "fullname", "enname", "cnspell", "area", "industry", "list_status", "list_board", "list_date", "delist_date",
-             "curr_type", "shsc", "source"]]
+    df = df[
+        [
+            "fina_code",
+            "code",
+            "exchange",
+            "name",
+            "fullname",
+            "enname",
+            "cnspell",
+            "area",
+            "industry",
+            "list_status",
+            "list_board",
+            "list_date",
+            "delist_date",
+            "curr_type",
+            "shsc",
+            "source",
+        ]
+    ]
 
     # 重命名列(和数据库列名一致)
-    df.set_axis(["c_fina_code", "c_code", "c_exchange", "c_name", "c_fullname", "c_enname", "c_cnspell", "c_area", "c_industry", "c_list_status", "c_list_board", "c_list_date", "c_delist_date",
-                 "c_curr_type", "c_shsc", "c_source"], axis="columns", inplace=True)
+    df.set_axis(
+        [
+            "c_fina_code",
+            "c_code",
+            "c_exchange",
+            "c_name",
+            "c_fullname",
+            "c_enname",
+            "c_cnspell",
+            "c_area",
+            "c_industry",
+            "c_list_status",
+            "c_list_board",
+            "c_list_date",
+            "c_delist_date",
+            "c_curr_type",
+            "c_shsc",
+            "c_source",
+        ],
+        axis="columns",
+        inplace=True,
+    )
 
     dataframe_to_table(df, "ttmp_stock", if_exists="replace")
 
     db = DBUtil()
 
-    update_count = db.update("""update tstock t,ttmp_stock s
+    update_count = db.update(
+        """update tstock t,ttmp_stock s
     set t.c_fina_code   = ifnull(s.c_fina_code  ,t.c_fina_code  ),
         t.c_code        = ifnull(s.c_code       ,t.c_code       ),
         t.c_exchange    = ifnull(s.c_exchange   ,t.c_exchange   ),
@@ -66,9 +113,11 @@ def sync_stock():
         t.c_shsc        = ifnull(s.c_shsc       ,t.c_shsc       ),
         t.c_source      = ifnull(s.c_source     ,t.c_source     ),
         t.c_update_time = now()
-    where t.c_fina_code = s.c_fina_code""")
+    where t.c_fina_code = s.c_fina_code"""
+    )
 
-    insert_count = db.insert("""insert ignore into tstock(c_fina_code,c_code,c_exchange,c_name,c_fullname,c_enname,c_cnspell,c_area,c_industry,c_list_status,c_list_board,c_list_date,c_delist_date,c_curr_type,c_shsc,c_source,c_create_time,c_update_time)
+    insert_count = db.insert(
+        """insert ignore into tstock(c_fina_code,c_code,c_exchange,c_name,c_fullname,c_enname,c_cnspell,c_area,c_industry,c_list_status,c_list_board,c_list_date,c_delist_date,c_curr_type,c_shsc,c_source,c_create_time,c_update_time)
     select c_fina_code,
         c_code        ,
         c_exchange    ,
@@ -87,7 +136,8 @@ def sync_stock():
         c_source      ,
         now(),
         now()
-    from ttmp_stock""")
+    from ttmp_stock"""
+    )
 
     db.execute("drop table ttmp_stock")
     print(f"sync stock complete, update={update_count}, insert={insert_count}")
@@ -101,3 +151,6 @@ def get_dataframe_for_index(index_code=None, market=None):
     """
     df = pro.index_basic(ts_code=index_code, market=market)
     return df
+
+
+sync_stock()

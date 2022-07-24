@@ -1,7 +1,7 @@
 from logging import NOTSET
 import requests
 import json
-from pdcool.utils.database import DBUtil
+from pdcool.utils.database.mysql import DBUtil
 from pdcool.utils.dataframe import *
 from pdcool.utils.datetime import current_time
 from pdcool.utils.param import get_param
@@ -25,18 +25,20 @@ def _get_fund_weighting_dataframe(fund_code):
         stock_price = stock.get("current_price")
         percent = stock.get("percent")
         change_percent = stock.get("change_percentage")
-        fund_weighting.append({
-            "date": end_date,
-            "fund_code": fund_code,
-            "stock_code": stock_code,
-            "stock_name": stock_name,
-            "stock_price": stock_price,
-            "percent": percent,
-            "change_percent": change_percent,
-            "source": "danjuan",
-            "create_time": current_time(),
-            "update_time": current_time()
-        })
+        fund_weighting.append(
+            {
+                "date": end_date,
+                "fund_code": fund_code,
+                "stock_code": stock_code,
+                "stock_name": stock_name,
+                "stock_price": stock_price,
+                "percent": percent,
+                "change_percent": change_percent,
+                "source": "danjuan",
+                "create_time": current_time(),
+                "update_time": current_time(),
+            }
+        )
     df = dataframe_from_json(fund_weighting)
     return df
 
@@ -50,10 +52,27 @@ def _put_fund_weighting_dataframe(df):
     for item in delete_args_json:
         date = item.get("date")
         fund_code = item.get("fund_code")
-        db.delete(f"delete from tfund_weighting where c_date='{date}' and c_fund_code='{fund_code}'")
+        db.delete(
+            f"delete from tfund_weighting where c_date='{date}' and c_fund_code='{fund_code}'"
+        )
 
     # 插入数据
-    df.set_axis(["c_date", "c_fund_code", "c_stock_code", "c_stock_name", "n_stock_price", "n_percent", "n_change_percent", "c_source", "c_create_time", "c_update_time"], axis="columns", inplace=True)
+    df.set_axis(
+        [
+            "c_date",
+            "c_fund_code",
+            "c_stock_code",
+            "c_stock_name",
+            "n_stock_price",
+            "n_percent",
+            "n_change_percent",
+            "c_source",
+            "c_create_time",
+            "c_update_time",
+        ],
+        axis="columns",
+        inplace=True,
+    )
     dataframe_to_table(df, "tfund_weighting", if_exists="append")
 
 

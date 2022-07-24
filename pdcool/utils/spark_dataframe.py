@@ -9,11 +9,21 @@ Last Modified time: 2022-01-01 18:47:35
 """
 
 from pyspark.sql import SparkSession
-from pdcool.utils.config import dbconfig as config
+from pdcool.utils.database.config import dbconfig as config
 
-jdbc_url = f'jdbc:mysql://{config.get("host")}:{config.get("port")}/{config.get("database")}'
-jdbc_prop = {"user": config.get("username"), "password": config.get("password"), "driver": "com.mysql.jdbc.Driver"}
-spark = SparkSession.builder.appName("PySpark Application").enableHiveSupport().getOrCreate()
+jdbc_url = (
+    f'jdbc:mysql://{config.get("host")}:{config.get("port")}/{config.get("database")}'
+)
+jdbc_prop = {
+    "user": config.get("username"),
+    "password": config.get("password"),
+    "driver": "com.mysql.jdbc.Driver",
+}
+spark = (
+    SparkSession.builder.appName("PySpark Application")
+    .enableHiveSupport()
+    .getOrCreate()
+)
 
 
 def spark_dataframe_from_sql(sql):

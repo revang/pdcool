@@ -8,31 +8,26 @@ Last Modified by   : revang
 Last Modified time : 2022-01-01 17:38:01
 """
 
-import logging
-import pymysql
-from pdcool.utils.config import dbconfig as config
-
-logging.basicConfig(level=logging.ERROR)
-
-# class DBUtil(dutool.DBUtil):
-#     """
-#     数据库工具类: 继承dutool.DBUtil，自动加载配置
-#     """
-
-#     def __init__(self):
-#         super().__init__(dbconfig)
+import cx_Oracle
+from pdcool.utils.database.config import db1 as dbconfig
 
 
-class DBUtil:
+class MysqlDBUtil:
     def __init__(self):
-        self.username = config.get("username")
-        self.password = config.get("password")
-        self.host = config.get("host")
-        self.port = int(config.get("port"))
-        self.database = config.get("database")
+        self.username = dbconfig.get("username")
+        self.password = dbconfig.get("password")
+        self.host = dbconfig.get("host")
+        self.port = int(dbconfig.get("port"))
+        self.database = dbconfig.get("database")
 
     def conn(self):
-        self.db = pymysql.connect(user=self.username, passwd=self.password, host=self.host, port=self.port, database=self.database)
+        self.db = pymysql.connect(
+            user=self.username,
+            passwd=self.password,
+            host=self.host,
+            port=self.port,
+            database=self.database,
+        )
         self.cursor = self.db.cursor()
 
     def close(self):
@@ -41,7 +36,6 @@ class DBUtil:
 
     def queryone(self, sql):
         self.conn()
-        logging.debug(sql)
         self.cursor.execute(sql)
         res = self.cursor.fetchone()
         self.close()
@@ -49,7 +43,6 @@ class DBUtil:
 
     def query(self, sql):
         self.conn()
-        logging.debug(sql)
         self.cursor.execute(sql)
         res = self.cursor.fetchall()
         self.close()
@@ -57,7 +50,6 @@ class DBUtil:
 
     def show(self, sql):
         self.conn()
-        logging.debug(sql)
         self.cursor.execute(sql)
         rows = self.cursor.fetchall()
         self.close()
@@ -66,7 +58,6 @@ class DBUtil:
 
     def __execute(self, sql):
         self.conn()
-        logging.debug(sql)
         count = self.cursor.execute(sql)
         self.db.commit()
         self.close()
@@ -83,7 +74,6 @@ class DBUtil:
 
     def execute(self, sql):
         self.conn()
-        logging.debug(sql)
         self.cursor.execute(sql)
         self.db.commit()
         self.close()
@@ -91,7 +81,6 @@ class DBUtil:
     def execute_list(self, sql_list):
         self.conn()
         for sql in sql_list:
-            logging.debug(sql)
             self.cursor.execute(sql)
         self.db.commit()
         self.close()

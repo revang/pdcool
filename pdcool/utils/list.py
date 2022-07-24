@@ -18,3 +18,30 @@ def list_split(list_collection, num):
     """
     for i in range(0, len(list_collection), num):
         yield list_collection[i: i + num]
+
+
+def find_list_in_twolist(list1, twolist1):
+    """ 查找list是否在双重列表组中 
+    案例: 
+        list1 = [1, 2]
+        twolist1 = [[[0, 1], [0, 2]], [[4, 4]]]
+        print(find_list_in_twolist(list1, twolist1))
+
+        list1 = [0, 2]
+        twolist1 = [[[0, 1], [0, 2]], [[4, 4]]]
+        print(find_list_in_twolist(list1, twolist1))
+    """
+    for idx1, val1 in enumerate(twolist1):
+        for idx2, val2 in enumerate(val1):
+            if list1 == val2:
+                return [idx1, idx2]
+    return [-1, -1]
+
+
+def init_twoarray(row, column, val):
+    """ 初始化二维数组
+    案例: 
+        twolist1 = init_twolist(3, 4, -1)
+        print(twolist1)
+    """
+    return [[val]*column for i in range(row)]
